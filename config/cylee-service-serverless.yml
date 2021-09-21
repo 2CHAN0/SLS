@@ -1,0 +1,25 @@
+functions:
+  cold:
+    handler: ./functions/coldFunctions/handler.cold
+    name: ${self:service}-${self:provider.stage}-cold
+    events:
+      - http:
+          path: cold
+          method: get
+    warmup:
+      warmerName1:
+        enabled: false
+      warmerName2:
+        enabled: false
+  warm:
+    handler: ./functions/warmFunctions/handler.warm
+    name: ${self:service}-${self:provider.stage}-warm
+    events:
+      - http:
+          path: warm
+          method: get
+#  warmUpHandler:
+#    handler: ./functions/warmer/handler.warmer
+#    name: ${self:service}-${self:provider.stage}-warmer
+#    events:
+#      - schedule: rate(1 minute)

@@ -1,0 +1,43 @@
+service: cylee-service-app
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: ap-northeast-2
+  role: arn:aws:iam::230175665354:role/serverless-dev-ap-northeast-2-lambdaRole
+
+custom:
+  warmup:
+    warmerName1:
+      enabled: true
+      events:
+        - schedule: rate(1 minute)
+      concurrency: 1
+      package:
+        individually: false
+    warmerName2:
+      enabled: true
+      events:
+        - schedule: rate(2 minutes)
+      concurrency: 2
+      package:
+        individually: false
+  splitStacks:
+    nestedStackCount: 20 # Controls the number of created nested stacks
+    perFunction: false
+    perType: true
+    perGroupFunction: false
+
+plugins:
+  - serverless-plugin-warmup
+  - serverless-plugin-split-stacks
+
+functions: ${file(${opt:config-file}):functions}
+
