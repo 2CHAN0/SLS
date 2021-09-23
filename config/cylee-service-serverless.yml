@@ -18,6 +18,11 @@ functions:
       - http:
           path: warm
           method: get
+          integration: lambda
+          request:
+            template:
+              application/json: '{ "stageVariables" : { "SERVERLESS_ALIAS" : "${self:provider.stage}" } }'
+
 #  warmUpHandler:
 #    handler: ./functions/warmer/handler.warmer
 #    name: ${self:service}-${self:provider.stage}-warmer

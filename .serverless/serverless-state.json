@@ -1,8 +1,8 @@
 {
   "service": {
-    "service": "cylee-service-app",
+    "service": "cylee-service",
     "serviceObject": {
-      "name": "cylee-service-app"
+      "name": "cylee-service"
     },
     "provider": {
       "name": "aws",
@@ -33,28 +33,28 @@
           "ColdLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/cylee-service-app-dev-cold"
+              "LogGroupName": "/aws/lambda/cylee-service-dev-cold"
             },
             "DependsOn": []
           },
           "WarmLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/cylee-service-app-dev-warm"
-            },
-            "DependsOn": []
-          },
-          "WarmUpPluginWarmerName2LogGroup": {
-            "Type": "AWS::Logs::LogGroup",
-            "Properties": {
-              "LogGroupName": "/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName2"
+              "LogGroupName": "/aws/lambda/cylee-service-dev-warm"
             },
             "DependsOn": []
           },
           "WarmUpPluginWarmerName1LogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName1"
+              "LogGroupName": "/aws/lambda/cylee-service-dev-warmup-plugin-warmerName1"
+            },
+            "DependsOn": []
+          },
+          "WarmUpPluginWarmerName2LogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/cylee-service-dev-warmup-plugin-warmerName2"
             },
             "DependsOn": []
           },
@@ -65,11 +65,11 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z/cylee-service-app.zip"
+                "S3Key": "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z/cylee-service.zip"
               },
               "Handler": "./functions/coldFunctions/handler.cold",
               "Runtime": "nodejs14.x",
-              "FunctionName": "cylee-service-app-dev-cold",
+              "FunctionName": "cylee-service-dev-cold",
               "MemorySize": 1024,
               "Timeout": 6,
               "Role": "arn:aws:iam::230175665354:role/serverless-dev-ap-northeast-2-lambdaRole"
@@ -85,44 +85,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z/cylee-service-app.zip"
+                "S3Key": "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z/cylee-service.zip"
               },
               "Handler": "./functions/warmFunctions/handler.warm",
               "Runtime": "nodejs14.x",
-              "FunctionName": "cylee-service-app-dev-warm",
+              "FunctionName": "cylee-service-dev-warm",
               "MemorySize": 1024,
               "Timeout": 6,
               "Role": "arn:aws:iam::230175665354:role/serverless-dev-ap-northeast-2-lambdaRole"
             },
             "DependsOn": [
               "WarmLogGroup"
-            ]
-          },
-          "WarmUpPluginWarmerName2LambdaFunction": {
-            "Type": "AWS::Lambda::Function",
-            "Properties": {
-              "Code": {
-                "S3Bucket": {
-                  "Ref": "ServerlessDeploymentBucket"
-                },
-                "S3Key": "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z/cylee-service-app.zip"
-              },
-              "Handler": ".warmup/warmerName2/index.warmUp",
-              "Runtime": "nodejs14.x",
-              "FunctionName": "cylee-service-app-dev-warmup-plugin-warmerName2",
-              "MemorySize": 128,
-              "Timeout": 10,
-              "Description": "Serverless WarmUp Plugin (warmer \"warmerName2\")",
-              "Role": {
-                "Fn::GetAtt": [
-                  "WarmUpPluginWarmerName2Role",
-                  "Arn"
-                ]
-              }
-            },
-            "DependsOn": [
-              "WarmUpPluginWarmerName2LogGroup",
-              "WarmUpPluginWarmerName2Role"
             ]
           },
           "WarmUpPluginWarmerName1LambdaFunction": {
@@ -132,11 +105,11 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z/cylee-service-app.zip"
+                "S3Key": "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z/cylee-service.zip"
               },
               "Handler": ".warmup/warmerName1/index.warmUp",
               "Runtime": "nodejs14.x",
-              "FunctionName": "cylee-service-app-dev-warmup-plugin-warmerName1",
+              "FunctionName": "cylee-service-dev-warmup-plugin-warmerName1",
               "MemorySize": 128,
               "Timeout": 10,
               "Description": "Serverless WarmUp Plugin (warmer \"warmerName1\")",
@@ -152,24 +125,32 @@
               "WarmUpPluginWarmerName1Role"
             ]
           },
-          "WarmUpPluginWarmerName2EventsRuleSchedule1": {
-            "Type": "AWS::Events::Rule",
+          "WarmUpPluginWarmerName2LambdaFunction": {
+            "Type": "AWS::Lambda::Function",
             "Properties": {
-              "ScheduleExpression": "rate(2 minutes)",
-              "State": "ENABLED",
-              "Targets": [
-                {
-                  "Arn": {
-                    "Fn::GetAtt": [
-                      "WarmUpPluginWarmerName2LambdaFunction",
-                      "Arn"
-                    ]
-                  },
-                  "Id": "warmUpPluginWarmerName2Schedule"
-                }
-              ]
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z/cylee-service.zip"
+              },
+              "Handler": ".warmup/warmerName2/index.warmUp",
+              "Runtime": "nodejs14.x",
+              "FunctionName": "cylee-service-dev-warmup-plugin-warmerName2",
+              "MemorySize": 128,
+              "Timeout": 10,
+              "Description": "Serverless WarmUp Plugin (warmer \"warmerName2\")",
+              "Role": {
+                "Fn::GetAtt": [
+                  "WarmUpPluginWarmerName2Role",
+                  "Arn"
+                ]
+              }
             },
-            "DependsOn": []
+            "DependsOn": [
+              "WarmUpPluginWarmerName2LogGroup",
+              "WarmUpPluginWarmerName2Role"
+            ]
           },
           "WarmUpPluginWarmerName1EventsRuleSchedule1": {
             "Type": "AWS::Events::Rule",
@@ -185,6 +166,25 @@
                     ]
                   },
                   "Id": "warmUpPluginWarmerName1Schedule"
+                }
+              ]
+            },
+            "DependsOn": []
+          },
+          "WarmUpPluginWarmerName2EventsRuleSchedule1": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+              "ScheduleExpression": "rate(2 minutes)",
+              "State": "ENABLED",
+              "Targets": [
+                {
+                  "Arn": {
+                    "Fn::GetAtt": [
+                      "WarmUpPluginWarmerName2LambdaFunction",
+                      "Arn"
+                    ]
+                  },
+                  "Id": "warmUpPluginWarmerName2Schedule"
                 }
               ]
             },
@@ -264,7 +264,7 @@
               "AuthorizationType": "NONE",
               "Integration": {
                 "IntegrationHttpMethod": "POST",
-                "Type": "AWS_PROXY",
+                "Type": "AWS",
                 "Uri": {
                   "Fn::Join": [
                     "",
@@ -287,16 +287,123 @@
                       "/invocations"
                     ]
                   ]
-                }
+                },
+                "PassthroughBehavior": "NEVER",
+                "RequestTemplates": {
+                  "application/json": "{ \"stageVariables\" : { \"SERVERLESS_ALIAS\" : \"dev\" } }",
+                  "application/x-www-form-urlencoded": "\n    #define( $body )\n      {\n      #foreach( $token in $input.path('$').split('&') )\n        #set( $keyVal = $token.split('=') )\n        #set( $keyValSize = $keyVal.size() )\n        #if( $keyValSize >= 1 )\n          #set( $key = $util.escapeJavaScript($util.urlDecode($keyVal[0])) )\n          #if( $keyValSize >= 2 )\n            #set($val = $util.escapeJavaScript($util.urlDecode($keyVal[1])).replaceAll(\"\\\\'\",\"'\"))\n          #else\n            #set( $val = '' )\n          #end\n          \"$key\": \"$val\"#if($foreach.hasNext),#end\n        #end\n      #end\n      }\n    #end\n\n    \n  #define( $loop )\n    {\n    #foreach($key in $map.keySet())\n        #set( $k = $util.escapeJavaScript($key) )\n        #set( $v = $util.escapeJavaScript($map.get($key)).replaceAll(\"\\\\'\", \"'\") )\n        \"$k\":\n          \"$v\"\n          #if( $foreach.hasNext ) , #end\n    #end\n    }\n  #end\n\n  {\n    \"body\": $body,\n    \"method\": \"$context.httpMethod\",\n    \"principalId\": \"$context.authorizer.principalId\",\n    \"stage\": \"$context.stage\",\n\n    \"cognitoPoolClaims\" : {\n       \n       \"sub\": \"$context.authorizer.claims.sub\"\n    },\n\n    #set( $map = $context.authorizer )\n    \"enhancedAuthContext\": $loop,\n\n    #set( $map = $input.params().header )\n    \"headers\": $loop,\n\n    #set( $map = $input.params().querystring )\n    \"query\": $loop,\n\n    #set( $map = $input.params().path )\n    \"path\": $loop,\n\n    #set( $map = $context.identity )\n    \"identity\": $loop,\n\n    #set( $map = $stageVariables )\n    \"stageVariables\": $loop,\n\n    \"requestPath\": \"$context.resourcePath\"\n  }\n\n  "
+                },
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "SelectionPattern": "",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "400",
+                    "SelectionPattern": "[\\s\\S]*\\[400\\][\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "401",
+                    "SelectionPattern": "[\\s\\S]*\\[401\\][\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "403",
+                    "SelectionPattern": "[\\s\\S]*\\[403\\][\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "404",
+                    "SelectionPattern": "[\\s\\S]*\\[404\\][\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "422",
+                    "SelectionPattern": "[\\s\\S]*\\[422\\][\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "500",
+                    "SelectionPattern": "[\\s\\S]*(Process\\s?exited\\s?before\\s?completing\\s?request|\\[500\\])[\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "502",
+                    "SelectionPattern": "[\\s\\S]*\\[502\\][\\s\\S]*",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  },
+                  {
+                    "StatusCode": "504",
+                    "SelectionPattern": "([\\s\\S]*\\[504\\][\\s\\S]*)|(.*Task timed out after \\d+\\.\\d+ seconds$)",
+                    "ResponseParameters": {},
+                    "ResponseTemplates": {}
+                  }
+                ]
               },
-              "MethodResponses": []
+              "MethodResponses": [
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "200"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "400"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "401"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "403"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "404"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "422"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "500"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "502"
+                },
+                {
+                  "ResponseParameters": {},
+                  "ResponseModels": {},
+                  "StatusCode": "504"
+                }
+              ]
             },
             "DependsOn": [
               "APINestedStack",
               "PermissionsNestedStack"
             ]
           },
-          "ApiGatewayDeployment1632211670037": {
+          "ApiGatewayDeployment1632410905127": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -313,115 +420,6 @@
               "APINestedStack"
             ]
           },
-          "WarmUpPluginWarmerName2Role": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-              "Path": "/",
-              "RoleName": {
-                "Fn::Join": [
-                  "-",
-                  [
-                    "cylee-service-app",
-                    "dev",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    "warmername2",
-                    "role"
-                  ]
-                ]
-              },
-              "AssumeRolePolicyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                  {
-                    "Effect": "Allow",
-                    "Principal": {
-                      "Service": [
-                        "lambda.amazonaws.com"
-                      ]
-                    },
-                    "Action": "sts:AssumeRole"
-                  }
-                ]
-              },
-              "Policies": [
-                {
-                  "PolicyName": {
-                    "Fn::Join": [
-                      "-",
-                      [
-                        "cylee-service-app",
-                        "dev",
-                        "warmer",
-                        "warmername2",
-                        "policy"
-                      ]
-                    ]
-                  },
-                  "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "logs:CreateLogGroup",
-                          "logs:CreateLogStream"
-                        ],
-                        "Resource": [
-                          {
-                            "Fn::Sub": [
-                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName2:*",
-                              {}
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "logs:PutLogEvents"
-                        ],
-                        "Resource": [
-                          {
-                            "Fn::Sub": [
-                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName2:*:*",
-                              {}
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "lambda:InvokeFunction"
-                        ],
-                        "Resource": [
-                          {
-                            "Fn::Sub": [
-                              "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-app-dev-warm",
-                              {}
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "ec2:CreateNetworkInterface",
-                          "ec2:DescribeNetworkInterfaces",
-                          "ec2:DetachNetworkInterface",
-                          "ec2:DeleteNetworkInterface"
-                        ],
-                        "Resource": "*"
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            "DependsOn": []
-          },
           "WarmUpPluginWarmerName1Role": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -430,7 +428,7 @@
                 "Fn::Join": [
                   "-",
                   [
-                    "cylee-service-app",
+                    "cylee-service",
                     "dev",
                     {
                       "Ref": "AWS::Region"
@@ -460,7 +458,7 @@
                     "Fn::Join": [
                       "-",
                       [
-                        "cylee-service-app",
+                        "cylee-service",
                         "dev",
                         "warmer",
                         "warmername1",
@@ -480,7 +478,7 @@
                         "Resource": [
                           {
                             "Fn::Sub": [
-                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName1:*",
+                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName1:*",
                               {}
                             ]
                           }
@@ -494,7 +492,7 @@
                         "Resource": [
                           {
                             "Fn::Sub": [
-                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName1:*:*",
+                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName1:*:*",
                               {}
                             ]
                           }
@@ -508,7 +506,7 @@
                         "Resource": [
                           {
                             "Fn::Sub": [
-                              "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-app-dev-warm",
+                              "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-dev-warm",
                               {}
                             ]
                           }
@@ -531,49 +529,119 @@
             },
             "DependsOn": []
           },
-          "PoliciesNestedStack": {
-            "Type": "AWS::CloudFormation::Stack",
+          "WarmUpPluginWarmerName2Role": {
+            "Type": "AWS::IAM::Role",
             "Properties": {
-              "Parameters": {
-                "ServerlessDeploymentBucketParameter": {
-                  "Ref": "ServerlessDeploymentBucket"
-                }
-              },
-              "TemplateURL": {
+              "Path": "/",
+              "RoleName": {
                 "Fn::Join": [
-                  "/",
+                  "-",
                   [
-                    "https://s3.ap-northeast-2.amazonaws.com",
+                    "cylee-service",
+                    "dev",
                     {
-                      "Ref": "ServerlessDeploymentBucket"
+                      "Ref": "AWS::Region"
                     },
-                    "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z",
-                    "cloudformation-template-Policies-nested-stack.json"
+                    "warmername2",
+                    "role"
                   ]
                 ]
-              }
+              },
+              "AssumeRolePolicyDocument": {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {
+                      "Service": [
+                        "lambda.amazonaws.com"
+                      ]
+                    },
+                    "Action": "sts:AssumeRole"
+                  }
+                ]
+              },
+              "Policies": [
+                {
+                  "PolicyName": {
+                    "Fn::Join": [
+                      "-",
+                      [
+                        "cylee-service",
+                        "dev",
+                        "warmer",
+                        "warmername2",
+                        "policy"
+                      ]
+                    ]
+                  },
+                  "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:CreateLogGroup",
+                          "logs:CreateLogStream"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": [
+                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName2:*",
+                              {}
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "logs:PutLogEvents"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": [
+                              "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName2:*:*",
+                              {}
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "lambda:InvokeFunction"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::Sub": [
+                              "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-dev-warm",
+                              {}
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "ec2:CreateNetworkInterface",
+                          "ec2:DescribeNetworkInterfaces",
+                          "ec2:DetachNetworkInterface",
+                          "ec2:DeleteNetworkInterface"
+                        ],
+                        "Resource": "*"
+                      }
+                    ]
+                  }
+                }
+              ]
             },
-            "DependsOn": [
-              "ServerlessDeploymentBucket"
-            ]
+            "DependsOn": []
           },
-          "VersionsNestedStack": {
+          "APINestedStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-              "Parameters": {
-                "WarmUpPluginWarmerName2LambdaFunctionParameter": {
-                  "Ref": "WarmUpPluginWarmerName2LambdaFunction"
-                },
-                "WarmUpPluginWarmerName1LambdaFunctionParameter": {
-                  "Ref": "WarmUpPluginWarmerName1LambdaFunction"
-                },
-                "ColdLambdaFunctionParameter": {
-                  "Ref": "ColdLambdaFunction"
-                },
-                "WarmLambdaFunctionParameter": {
-                  "Ref": "WarmLambdaFunction"
-                }
-              },
+              "Parameters": {},
               "TemplateURL": {
                 "Fn::Join": [
                   "/",
@@ -582,35 +650,17 @@
                     {
                       "Ref": "ServerlessDeploymentBucket"
                     },
-                    "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z",
-                    "cloudformation-template-Versions-nested-stack.json"
+                    "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z",
+                    "cloudformation-template-API-nested-stack.json"
                   ]
                 ]
               }
-            },
-            "DependsOn": [
-              "WarmUpPluginWarmerName2LambdaFunction",
-              "WarmUpPluginWarmerName1LambdaFunction",
-              "ColdLambdaFunction",
-              "WarmLambdaFunction"
-            ]
+            }
           },
           "PermissionsNestedStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
               "Parameters": {
-                "WarmUpPluginWarmerName2EventsRuleSchedule1ArnParameter": {
-                  "Fn::GetAtt": [
-                    "WarmUpPluginWarmerName2EventsRuleSchedule1",
-                    "Arn"
-                  ]
-                },
-                "WarmUpPluginWarmerName2LambdaFunctionArnParameter": {
-                  "Fn::GetAtt": [
-                    "WarmUpPluginWarmerName2LambdaFunction",
-                    "Arn"
-                  ]
-                },
                 "WarmUpPluginWarmerName1EventsRuleSchedule1ArnParameter": {
                   "Fn::GetAtt": [
                     "WarmUpPluginWarmerName1EventsRuleSchedule1",
@@ -620,6 +670,18 @@
                 "WarmUpPluginWarmerName1LambdaFunctionArnParameter": {
                   "Fn::GetAtt": [
                     "WarmUpPluginWarmerName1LambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "WarmUpPluginWarmerName2EventsRuleSchedule1ArnParameter": {
+                  "Fn::GetAtt": [
+                    "WarmUpPluginWarmerName2EventsRuleSchedule1",
+                    "Arn"
+                  ]
+                },
+                "WarmUpPluginWarmerName2LambdaFunctionArnParameter": {
+                  "Fn::GetAtt": [
+                    "WarmUpPluginWarmerName2LambdaFunction",
                     "Arn"
                   ]
                 },
@@ -650,26 +712,30 @@
                     {
                       "Ref": "ServerlessDeploymentBucket"
                     },
-                    "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z",
+                    "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z",
                     "cloudformation-template-Permissions-nested-stack.json"
                   ]
                 ]
               }
             },
             "DependsOn": [
-              "WarmUpPluginWarmerName2EventsRuleSchedule1",
-              "WarmUpPluginWarmerName2LambdaFunction",
               "WarmUpPluginWarmerName1EventsRuleSchedule1",
               "WarmUpPluginWarmerName1LambdaFunction",
+              "WarmUpPluginWarmerName2EventsRuleSchedule1",
+              "WarmUpPluginWarmerName2LambdaFunction",
               "APINestedStack",
               "ColdLambdaFunction",
               "WarmLambdaFunction"
             ]
           },
-          "APINestedStack": {
+          "PoliciesNestedStack": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-              "Parameters": {},
+              "Parameters": {
+                "ServerlessDeploymentBucketParameter": {
+                  "Ref": "ServerlessDeploymentBucket"
+                }
+              },
               "TemplateURL": {
                 "Fn::Join": [
                   "/",
@@ -678,12 +744,53 @@
                     {
                       "Ref": "ServerlessDeploymentBucket"
                     },
-                    "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z",
-                    "cloudformation-template-API-nested-stack.json"
+                    "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z",
+                    "cloudformation-template-Policies-nested-stack.json"
                   ]
                 ]
               }
-            }
+            },
+            "DependsOn": [
+              "ServerlessDeploymentBucket"
+            ]
+          },
+          "VersionsNestedStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+              "Parameters": {
+                "WarmUpPluginWarmerName1LambdaFunctionParameter": {
+                  "Ref": "WarmUpPluginWarmerName1LambdaFunction"
+                },
+                "WarmUpPluginWarmerName2LambdaFunctionParameter": {
+                  "Ref": "WarmUpPluginWarmerName2LambdaFunction"
+                },
+                "ColdLambdaFunctionParameter": {
+                  "Ref": "ColdLambdaFunction"
+                },
+                "WarmLambdaFunctionParameter": {
+                  "Ref": "WarmLambdaFunction"
+                }
+              },
+              "TemplateURL": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "https://s3.ap-northeast-2.amazonaws.com",
+                    {
+                      "Ref": "ServerlessDeploymentBucket"
+                    },
+                    "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z",
+                    "cloudformation-template-Versions-nested-stack.json"
+                  ]
+                ]
+              }
+            },
+            "DependsOn": [
+              "WarmUpPluginWarmerName1LambdaFunction",
+              "WarmUpPluginWarmerName2LambdaFunction",
+              "ColdLambdaFunction",
+              "WarmLambdaFunction"
+            ]
           }
         },
         "Outputs": {
@@ -692,19 +799,7 @@
               "Ref": "ServerlessDeploymentBucket"
             },
             "Export": {
-              "Name": "sls-cylee-service-app-dev-ServerlessDeploymentBucketName"
-            }
-          },
-          "WarmUpPluginWarmerName2LambdaFunctionQualifiedArn": {
-            "Description": "Current Lambda function version",
-            "Value": {
-              "Fn::GetAtt": [
-                "VersionsNestedStack",
-                "Outputs.WarmUpPluginWarmerName2LambdaVersionLQ9jdl5AyRuyh5VBb0aQDpb8d5NaDnZlvtMKz0tbYUY"
-              ]
-            },
-            "Export": {
-              "Name": "sls-cylee-service-app-dev-WarmUpPluginWarmerName2LambdaFunctionQualifiedArn"
+              "Name": "sls-cylee-service-dev-ServerlessDeploymentBucketName"
             }
           },
           "WarmUpPluginWarmerName1LambdaFunctionQualifiedArn": {
@@ -712,11 +807,23 @@
             "Value": {
               "Fn::GetAtt": [
                 "VersionsNestedStack",
-                "Outputs.WarmUpPluginWarmerName1LambdaVersion58Lfkk6Z0mcLQF9fDpKjwCcf7ouxBItWekjUb3nLI"
+                "Outputs.WarmUpPluginWarmerName1LambdaVersion3vHYBNTT6Z3jEdCu88nn8SA2aIy5qz75Lo7JRiwV9w"
               ]
             },
             "Export": {
-              "Name": "sls-cylee-service-app-dev-WarmUpPluginWarmerName1LambdaFunctionQualifiedArn"
+              "Name": "sls-cylee-service-dev-WarmUpPluginWarmerName1LambdaFunctionQualifiedArn"
+            }
+          },
+          "WarmUpPluginWarmerName2LambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Fn::GetAtt": [
+                "VersionsNestedStack",
+                "Outputs.WarmUpPluginWarmerName2LambdaVersionZnHTMp76gsQhZ5w9g6lEjW0ds4IHFmePH54UNMKMY"
+              ]
+            },
+            "Export": {
+              "Name": "sls-cylee-service-dev-WarmUpPluginWarmerName2LambdaFunctionQualifiedArn"
             }
           },
           "ColdLambdaFunctionQualifiedArn": {
@@ -724,11 +831,11 @@
             "Value": {
               "Fn::GetAtt": [
                 "VersionsNestedStack",
-                "Outputs.ColdLambdaVersionS5QZ00HkYGhgXwVlRswNpHRl5akeHIE82lhhg25JGtQ"
+                "Outputs.ColdLambdaVersionpRivTfKpkctNbMO97LI8uNadhOoRGHS5clWYQ7ag"
               ]
             },
             "Export": {
-              "Name": "sls-cylee-service-app-dev-ColdLambdaFunctionQualifiedArn"
+              "Name": "sls-cylee-service-dev-ColdLambdaFunctionQualifiedArn"
             }
           },
           "WarmLambdaFunctionQualifiedArn": {
@@ -736,11 +843,11 @@
             "Value": {
               "Fn::GetAtt": [
                 "VersionsNestedStack",
-                "Outputs.WarmLambdaVersiont1h4t1vZ8bKAxUqEwfatsWJo3Q3uYeMcPB0u5ANlhM"
+                "Outputs.WarmLambdaVersionPcC4JKBcwzAgwpqUEfKIDfjDnJQvuXsreSUPIZjAJiU"
               ]
             },
             "Export": {
-              "Name": "sls-cylee-service-app-dev-WarmLambdaFunctionQualifiedArn"
+              "Name": "sls-cylee-service-dev-WarmLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -769,7 +876,7 @@
               ]
             },
             "Export": {
-              "Name": "sls-cylee-service-app-dev-ServiceEndpoint"
+              "Name": "sls-cylee-service-dev-ServiceEndpoint"
             }
           }
         }
@@ -900,7 +1007,7 @@
     "functions": {
       "cold": {
         "handler": "./functions/coldFunctions/handler.cold",
-        "name": "cylee-service-app-dev-cold",
+        "name": "cylee-service-dev-cold",
         "events": [
           {
             "http": {
@@ -923,17 +1030,54 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "ColdLambdaVersionS5QZ00HkYGhgXwVlRswNpHRl5akeHIE82lhhg25JGtQ"
+        "versionLogicalId": "ColdLambdaVersionpRivTfKpkctNbMO97LI8uNadhOoRGHS5clWYQ7ag"
       },
       "warm": {
         "handler": "./functions/warmFunctions/handler.warm",
-        "name": "cylee-service-app-dev-warm",
+        "name": "cylee-service-dev-warm",
         "events": [
           {
             "http": {
               "path": "warm",
               "method": "get",
-              "integration": "AWS_PROXY"
+              "integration": "AWS",
+              "request": {
+                "template": {
+                  "application/json": "{ \"stageVariables\" : { \"SERVERLESS_ALIAS\" : \"dev\" } }"
+                },
+                "passThrough": "NEVER"
+              },
+              "response": {
+                "statusCodes": {
+                  "200": {
+                    "pattern": ""
+                  },
+                  "400": {
+                    "pattern": "[\\s\\S]*\\[400\\][\\s\\S]*"
+                  },
+                  "401": {
+                    "pattern": "[\\s\\S]*\\[401\\][\\s\\S]*"
+                  },
+                  "403": {
+                    "pattern": "[\\s\\S]*\\[403\\][\\s\\S]*"
+                  },
+                  "404": {
+                    "pattern": "[\\s\\S]*\\[404\\][\\s\\S]*"
+                  },
+                  "422": {
+                    "pattern": "[\\s\\S]*\\[422\\][\\s\\S]*"
+                  },
+                  "500": {
+                    "pattern": "[\\s\\S]*(Process\\s?exited\\s?before\\s?completing\\s?request|\\[500\\])[\\s\\S]*"
+                  },
+                  "502": {
+                    "pattern": "[\\s\\S]*\\[502\\][\\s\\S]*"
+                  },
+                  "504": {
+                    "pattern": "([\\s\\S]*\\[504\\][\\s\\S]*)|(.*Task timed out after \\d+\\.\\d+ seconds$)"
+                  }
+                }
+              }
             }
           }
         ],
@@ -942,31 +1086,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "WarmLambdaVersiont1h4t1vZ8bKAxUqEwfatsWJo3Q3uYeMcPB0u5ANlhM"
-      },
-      "warmUpPluginWarmerName2": {
-        "description": "Serverless WarmUp Plugin (warmer \"warmerName2\")",
-        "events": {
-          "$ref": "$[\"service\"][\"custom\"][\"warmup\"][\"warmerName2\"][\"events\"]"
-        },
-        "handler": ".warmup/warmerName2/index.warmUp",
-        "memorySize": 128,
-        "name": "cylee-service-app-dev-warmup-plugin-warmerName2",
-        "runtime": "nodejs14.x",
-        "package": {
-          "individually": false,
-          "exclude": [
-            "**"
-          ],
-          "include": [
-            ".warmup\\warmerName2\\**"
-          ]
-        },
-        "timeout": 10,
-        "role": "WarmUpPluginWarmerName2Role",
-        "memory": 128,
-        "vpc": {},
-        "versionLogicalId": "WarmUpPluginWarmerName2LambdaVersionLQ9jdl5AyRuyh5VBb0aQDpb8d5NaDnZlvtMKz0tbYUY"
+        "versionLogicalId": "WarmLambdaVersionPcC4JKBcwzAgwpqUEfKIDfjDnJQvuXsreSUPIZjAJiU"
       },
       "warmUpPluginWarmerName1": {
         "description": "Serverless WarmUp Plugin (warmer \"warmerName1\")",
@@ -975,7 +1095,7 @@
         },
         "handler": ".warmup/warmerName1/index.warmUp",
         "memorySize": 128,
-        "name": "cylee-service-app-dev-warmup-plugin-warmerName1",
+        "name": "cylee-service-dev-warmup-plugin-warmerName1",
         "runtime": "nodejs14.x",
         "package": {
           "individually": false,
@@ -990,110 +1110,35 @@
         "role": "WarmUpPluginWarmerName1Role",
         "memory": 128,
         "vpc": {},
-        "versionLogicalId": "WarmUpPluginWarmerName1LambdaVersion58Lfkk6Z0mcLQF9fDpKjwCcf7ouxBItWekjUb3nLI"
+        "versionLogicalId": "WarmUpPluginWarmerName1LambdaVersion3vHYBNTT6Z3jEdCu88nn8SA2aIy5qz75Lo7JRiwV9w"
+      },
+      "warmUpPluginWarmerName2": {
+        "description": "Serverless WarmUp Plugin (warmer \"warmerName2\")",
+        "events": {
+          "$ref": "$[\"service\"][\"custom\"][\"warmup\"][\"warmerName2\"][\"events\"]"
+        },
+        "handler": ".warmup/warmerName2/index.warmUp",
+        "memorySize": 128,
+        "name": "cylee-service-dev-warmup-plugin-warmerName2",
+        "runtime": "nodejs14.x",
+        "package": {
+          "individually": false,
+          "exclude": [
+            "**"
+          ],
+          "include": [
+            ".warmup\\warmerName2\\**"
+          ]
+        },
+        "timeout": 10,
+        "role": "WarmUpPluginWarmerName2Role",
+        "memory": 128,
+        "vpc": {},
+        "versionLogicalId": "WarmUpPluginWarmerName2LambdaVersionZnHTMp76gsQhZ5w9g6lEjW0ds4IHFmePH54UNMKMY"
       }
     },
     "resources": {
       "Resources": {
-        "WarmUpPluginWarmerName2Role": {
-          "Type": "AWS::IAM::Role",
-          "Properties": {
-            "Path": "/",
-            "RoleName": {
-              "Fn::Join": [
-                "-",
-                [
-                  "cylee-service-app",
-                  "dev",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  "warmername2",
-                  "role"
-                ]
-              ]
-            },
-            "AssumeRolePolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Principal": {
-                    "Service": [
-                      "lambda.amazonaws.com"
-                    ]
-                  },
-                  "Action": "sts:AssumeRole"
-                }
-              ]
-            },
-            "Policies": [
-              {
-                "PolicyName": {
-                  "Fn::Join": [
-                    "-",
-                    [
-                      "cylee-service-app",
-                      "dev",
-                      "warmer",
-                      "warmername2",
-                      "policy"
-                    ]
-                  ]
-                },
-                "PolicyDocument": {
-                  "Version": "2012-10-17",
-                  "Statement": [
-                    {
-                      "Effect": "Allow",
-                      "Action": [
-                        "logs:CreateLogGroup",
-                        "logs:CreateLogStream"
-                      ],
-                      "Resource": [
-                        {
-                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName2:*"
-                        }
-                      ]
-                    },
-                    {
-                      "Effect": "Allow",
-                      "Action": [
-                        "logs:PutLogEvents"
-                      ],
-                      "Resource": [
-                        {
-                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName2:*:*"
-                        }
-                      ]
-                    },
-                    {
-                      "Effect": "Allow",
-                      "Action": [
-                        "lambda:InvokeFunction"
-                      ],
-                      "Resource": [
-                        {
-                          "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-app-dev-warm"
-                        }
-                      ]
-                    },
-                    {
-                      "Effect": "Allow",
-                      "Action": [
-                        "ec2:CreateNetworkInterface",
-                        "ec2:DescribeNetworkInterfaces",
-                        "ec2:DetachNetworkInterface",
-                        "ec2:DeleteNetworkInterface"
-                      ],
-                      "Resource": "*"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
         "WarmUpPluginWarmerName1Role": {
           "Type": "AWS::IAM::Role",
           "Properties": {
@@ -1102,7 +1147,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "cylee-service-app",
+                  "cylee-service",
                   "dev",
                   {
                     "Ref": "AWS::Region"
@@ -1132,7 +1177,7 @@
                   "Fn::Join": [
                     "-",
                     [
-                      "cylee-service-app",
+                      "cylee-service",
                       "dev",
                       "warmer",
                       "warmername1",
@@ -1151,7 +1196,7 @@
                       ],
                       "Resource": [
                         {
-                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName1:*"
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName1:*"
                         }
                       ]
                     },
@@ -1162,7 +1207,7 @@
                       ],
                       "Resource": [
                         {
-                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-app-dev-warmup-plugin-warmerName1:*:*"
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName1:*:*"
                         }
                       ]
                     },
@@ -1173,7 +1218,106 @@
                       ],
                       "Resource": [
                         {
-                          "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-app-dev-warm"
+                          "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-dev-warm"
+                        }
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "ec2:CreateNetworkInterface",
+                        "ec2:DescribeNetworkInterfaces",
+                        "ec2:DetachNetworkInterface",
+                        "ec2:DeleteNetworkInterface"
+                      ],
+                      "Resource": "*"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "WarmUpPluginWarmerName2Role": {
+          "Type": "AWS::IAM::Role",
+          "Properties": {
+            "Path": "/",
+            "RoleName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "cylee-service",
+                  "dev",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  "warmername2",
+                  "role"
+                ]
+              ]
+            },
+            "AssumeRolePolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Principal": {
+                    "Service": [
+                      "lambda.amazonaws.com"
+                    ]
+                  },
+                  "Action": "sts:AssumeRole"
+                }
+              ]
+            },
+            "Policies": [
+              {
+                "PolicyName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "cylee-service",
+                      "dev",
+                      "warmer",
+                      "warmername2",
+                      "policy"
+                    ]
+                  ]
+                },
+                "PolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "logs:CreateLogGroup",
+                        "logs:CreateLogStream"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName2:*"
+                        }
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "logs:PutLogEvents"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cylee-service-dev-warmup-plugin-warmerName2:*:*"
+                        }
+                      ]
+                    },
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "lambda:InvokeFunction"
+                      ],
+                      "Resource": [
+                        {
+                          "Fn::Sub": "arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:cylee-service-dev-warm"
                         }
                       ]
                     },
@@ -1218,10 +1362,10 @@
     },
     "layers": {},
     "isDashboardMonitoringPreconfigured": false,
-    "artifact": "C:\\Users\\cylee\\Desktop\\SLS\\.serverless\\cylee-service-app.zip"
+    "artifact": "C:\\Users\\cylee\\Desktop\\SLS\\.serverless\\cylee-service.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/cylee-service-app/dev/1632211675458-2021-09-21T08:07:55.458Z",
-    "artifact": "cylee-service-app.zip"
+    "artifactDirectoryName": "serverless/cylee-service/dev/1632410916583-2021-09-23T15:28:36.583Z",
+    "artifact": "cylee-service.zip"
   }
 }
