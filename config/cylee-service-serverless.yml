@@ -6,11 +6,16 @@ functions:
       - http:
           path: cold
           method: get
+#          integration: lambda
+#          request:
+#            template:
+#              application/json: '{ "stageVariables" : { "SERVERLESS_YML_VARIABLE" : "${self:provider.stage}" } }'
     warmup:
-      warmerName1:
+      officeWarmer:
         enabled: false
-      warmerName2:
+      outOfOfficeWarmer:
         enabled: false
+
   warm:
     handler: ./functions/warmFunctions/handler.warm
     name: ${self:service}-${self:provider.stage}-warm
@@ -18,13 +23,31 @@ functions:
       - http:
           path: warm
           method: get
-          integration: lambda
-          request:
-            template:
-              application/json: '{ "stageVariables" : { "SERVERLESS_ALIAS" : "${self:provider.stage}" } }'
+    warmup:
+      officeWarmer:
+        enabled: false
+      outOfOfficeWarmer:
+        enabled: false
 
+  warm2:
+    handler: ./functions/warmFunctions/handler2.warm2
+    name: ${self:service}-${self:provider.stage}-warm2
+    events:
+      - http:
+          path: warm2
+          method: get
+    warmup:
+      officeWarmer:
+        enabled: false
+      outOfOfficeWarmer:
+        enabled: false
 #  warmUpHandler:
 #    handler: ./functions/warmer/handler.warmer
 #    name: ${self:service}-${self:provider.stage}-warmer
 #    events:
 #      - schedule: rate(1 minute)
+
+#          integration: lambda
+#          request:
+#            template:
+#              application/json: '{ "stageVariables" : { "SERVERLESS_ALIAS" : "${self:provider.stage}" } }'

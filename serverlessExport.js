@@ -12,6 +12,7 @@ module.exports.functions = function(){
         .reduce((result, functions) => {
             return Object.assign((result, functions));
         }, {});
-
+    // Object.entries(result).map([funcName, config] => config.)
+    // console.log(result);
     return result
 };

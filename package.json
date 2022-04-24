@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "serverless deploy -v --config-file ./serverlessExport.js"
+    "deploy": "serverless deploy -v --config-file ./serverlessExport.js",
+    "offline": "serverless offline start"
   },
   "author": "cy.lee",
   "license": "ISC",
@@ -15,7 +16,10 @@
   "dependencies": {
     "aws-sdk": "^2.991.0",
     "js-yaml": "^4.1.0",
+    "serverless-auto-swagger": "^2.4.1",
+    "serverless-offline": "^8.7.0",
     "serverless-plugin-split-stacks": "^1.11.2",
+    "serverless-plugin-warmup": "^5.3.1",
     "yamljs": "^0.3.0"
   }
 }
