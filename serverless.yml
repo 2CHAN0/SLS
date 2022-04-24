@@ -33,7 +33,7 @@ functions:
 custom:
   autoswagger:
     apiType: http
-    basePath: /${self:provider.stage}`
+    basePath: /${self:provider.stage}
 #    useStage: true
 #    apiKeyHeaders: ['Authorization', 'x-api-key']
 

@@ -1,3 +1,3 @@
-module.exports.cold = async (event, context, callback) => {
-    callback(null, 'Hello cold Lambda!')
+module.exports.cold = async (event, context) => {
+    return 'Hello cold Lambda!'
 };
