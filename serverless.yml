@@ -1,6 +1,4 @@
 service: cylee-service
-#app: your-app-name
-#org: your-org-name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -13,30 +11,54 @@ provider:
   region: ap-northeast-2
   role: arn:aws:iam::230175665354:role/serverless-dev-ap-northeast-2-lambdaRole
 
-#functions: ${file(${opt:config-file}):functions}
 functions:
   cold:
-    handler: ./functions/coldFunctions/handler.cold
+    handler: entry/slsWarmer.coldHandler
     name: ${self:service}-${self:provider.stage}-cold
     events:
       - http:
           path: cold
           method: get
   warm:
-    handler: ./functions/warmFunctions/handler.warm
+    handler: entry/slsWarmer.warmHandler
+    name: ${self:service}-${self:provider.stage}-warm
+    events:
+      - http:
+          path: fake
+          method: get
+
+  query:
+    handler: entry/slsWarmer.warmHandler
+    name: ${self:service}-${self:provider.stage}-warm
+    events:
+      - http:
+          path: warm/{fakeId}
+          method: get
+          responses:
+            200:
+              description: 'successful API Response'
+              bodyType: 'Flight'
+
+  fakePost:
+    handler: entry/slsWarmer.warmHandler
     name: ${self:service}-${self:provider.stage}-warm
     events:
       - http:
           path: warm
-          method: get
+          method: post
+          bodyType: 'PostFlightBody'
+          responses:
+            200:
+              description: 'successful API Response'
+              bodyType: 'Flight'
 
 custom:
   autoswagger:
     apiType: http
-    basePath: /${self:provider.stage}
+    typefiles: ['./types/api-types.d.ts', './types/signup/signup-api-types.d.ts']
+#    basePath: /${self:provider.stage}
 #    useStage: true
 #    apiKeyHeaders: ['Authorization', 'x-api-key']
-
 #  warmup:
 #    officeWarmer:
 #      enabled: true
@@ -63,9 +85,9 @@ custom:
 #    noPrependStageInUrl: true
 
 plugins:
+  - serverless-auto-swagger
 #  - serverless-plugin-warmup
 #  - serverless-plugin-split-stacks
-  - serverless-auto-swagger
   - serverless-offline
 
 

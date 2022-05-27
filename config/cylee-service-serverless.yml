@@ -1,15 +1,11 @@
 functions:
   cold:
-    handler: ./functions/coldFunctions/handler.cold
+    handler: entry/slsWarmer.coldHandler
     name: ${self:service}-${self:provider.stage}-cold
     events:
       - http:
           path: cold
           method: get
-#          integration: lambda
-#          request:
-#            template:
-#              application/json: '{ "stageVariables" : { "SERVERLESS_YML_VARIABLE" : "${self:provider.stage}" } }'
     warmup:
       officeWarmer:
         enabled: false
@@ -17,7 +13,7 @@ functions:
         enabled: false
 
   warm:
-    handler: ./functions/warmFunctions/handler.warm
+    handler: entry/slsWarmer.warmHandler
     name: ${self:service}-${self:provider.stage}-warm
     events:
       - http:
@@ -29,25 +25,8 @@ functions:
       outOfOfficeWarmer:
         enabled: false
 
-  warm2:
-    handler: ./functions/warmFunctions/handler2.warm2
-    name: ${self:service}-${self:provider.stage}-warm2
-    events:
-      - http:
-          path: warm2
-          method: get
-    warmup:
-      officeWarmer:
-        enabled: false
-      outOfOfficeWarmer:
-        enabled: false
 #  warmUpHandler:
 #    handler: ./functions/warmer/handler.warmer
 #    name: ${self:service}-${self:provider.stage}-warmer
 #    events:
 #      - schedule: rate(1 minute)
-
-#          integration: lambda
-#          request:
-#            template:
-#              application/json: '{ "stageVariables" : { "SERVERLESS_ALIAS" : "${self:provider.stage}" } }'

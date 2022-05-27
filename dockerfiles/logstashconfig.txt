@@ -1,0 +1,35 @@
+input { 
+    s3 {
+        access_key_id => ''
+        secret_access_key => ''
+        region => 'ap-northeast-2'
+        bucket => 'my-es-log-bucket'
+        prefix => 'logstash'
+    }
+} 
+
+filter {
+    if [message] = ~ /^\s*$/ { drop { } }
+    if [message] = ~ 'REPORT RequestId:' { drop { } }
+    if [message] = ~ 'START RequestId:' { drop { } }
+    if [message] = ~ 'END RequestId:' { drop { } } 
+    dissect {
+        mapping => {
+            'message' => '%{timestamp} %{message}'
+        } remove_field => ['timestamp']
+    } 
+    json {
+        source => 'message'
+        target => 'meta'
+    } 
+    json {
+        source => '[meta][message]'
+        target => 'log'
+    }
+} 
+output { 
+    opensearch {
+        hosts => ['http://opensearch-node1:9200']
+        index => 'opensearch-logstash-type-%{+YYYY.MM.dd}'
+    }
+}
