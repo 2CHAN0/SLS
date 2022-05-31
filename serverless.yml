@@ -24,7 +24,7 @@ functions:
     name: ${self:service}-${self:provider.stage}-warm
     events:
       - http:
-          path: fake
+          path: warm
           method: get
 
   query:
@@ -56,7 +56,7 @@ custom:
   autoswagger:
     apiType: http
     typefiles: ['./types/api-types.d.ts', './types/signup/signup-api-types.d.ts']
-#    basePath: /${self:provider.stage}
+    basePath: /${self:provider.stage}
 #    useStage: true
 #    apiKeyHeaders: ['Authorization', 'x-api-key']
 #  warmup:
