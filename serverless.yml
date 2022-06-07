@@ -27,26 +27,14 @@ functions:
           path: warm
           method: get
 
-  query:
-    handler: entry/slsWarmer.warmHandler
-    name: ${self:service}-${self:provider.stage}-warm
-    events:
-      - http:
-          path: warm/{fakeId}
-          method: get
-          responses:
-            200:
-              description: 'successful API Response'
-              bodyType: 'Flight'
-
-  fakePost:
-    handler: entry/slsWarmer.warmHandler
-    name: ${self:service}-${self:provider.stage}-warm
+  warmPost:
+    handler: entry/slsWarmer.postHandler
+    name: ${self:service}-${self:provider.stage}-warm-post
     events:
       - http:
           path: warm
           method: post
-          bodyType: 'PostFlightBody'
+          bodyType: 'Flight'
           responses:
             200:
               description: 'successful API Response'
@@ -85,7 +73,7 @@ custom:
 #    noPrependStageInUrl: true
 
 plugins:
-  - serverless-auto-swagger
+  - serverless-auto-swagger-desc-example
 #  - serverless-plugin-warmup
 #  - serverless-plugin-split-stacks
   - serverless-offline

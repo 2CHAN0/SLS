@@ -1,12 +1,12 @@
-export interface Flight {
+export type Flight = {
     id: string;
-    pk: string;
-    sk: string;
-    origin: string;
-    destination: string;
-    departureDate: number;
-    passengers: Passenger[];
+    id_DESC: 'You can write description for your model'
+    id_EXAMPLE: 'cy.lee'
+    age: number;
+    age_DESC: 'You can write description for your model'
+    age_EXAMPLE: 30
 }
+
 export type Passenger = {
   name: string;
   age: number;
